@@ -9,7 +9,7 @@ public class SnakeGameApp {
         SnakeGamePanel gamePanel = new SnakeGamePanel();
         frame.add(gamePanel);
         
-        frame.pack();
+        frame.pack();  
         frame.setVisible(true);
     }
 }
