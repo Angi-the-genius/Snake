@@ -5,17 +5,29 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashSet;
 
 public class SnakeGamePanel extends JPanel {
 
     private Snake snake;
     private Point apple;
+    private Timer appleTimer;
+    private HashSet<Point> applePositions;
 
     public SnakeGamePanel() {
         snake = new Snake();
         apple = new Point(10, 10); // Inizializza la posizione della mela
 
         setPreferredSize(new Dimension(400, 400)); // Imposta le dimensioni del pannello
+
+        applePositions = new HashSet<>();
+        appleTimer = new Timer(8000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                generateApple();
+            }
+        });
+        appleTimer.start();
 
         // Aggiungi il key listener per le frecce direzionali
         addKeyListener(new KeyAdapter());
@@ -34,12 +46,23 @@ public class SnakeGamePanel extends JPanel {
         timer.start();
     }
 
+    private void generateApple() {
+        Point newApple;
+        do {
+            newApple = new Point((int) (Math.random() * getWidth()), (int) (Math.random() * getHeight()));
+        } while (applePositions.contains(newApple) || snake.collidesWithPoint(newApple));
+    
+        applePositions.add(newApple);
+        apple = newApple;
+        repaint();
+    }
+    
     private void checkCollisions() {
         // Controlla se il serpente ha mangiato la mela
         if (snake.getHead().equals(apple)) {
             snake.grow();
-            // Genera una nuova posizione per la mela
-            apple.setLocation(Math.random() * getWidth(), Math.random() * getHeight());
+            applePositions.remove(apple);
+            generateApple(); // Genera una nuova mela
         }
 
         // Controlla le collisioni con i bordi e il corpo del serpente

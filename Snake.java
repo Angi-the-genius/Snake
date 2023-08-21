@@ -12,6 +12,15 @@ public class Snake {
         direction = KeyEvent.VK_RIGHT; // Direzione iniziale
     }
 
+    public boolean collidesWithPoint(Point point) {
+        for (Point bodySegment : body) {
+            if (bodySegment.equals(point)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public void move() {
         Point newHead = (Point) getHead().clone();
 
